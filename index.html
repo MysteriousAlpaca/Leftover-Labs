@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leftover Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-deep: #006e2a;
+            --green-mid: #2a9d56;
+            --green-light: #4CAF50;
+            --navy: #1e3c72;
+            --cream: #fdf8f0;
+            --warm-white: #fffef9;
+            --red: #ff6b6b;
+        }
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: Trebuchet MS;
+            background: linear-gradient(90deg,rgba(0, 56, 36, 1) 0%, rgba(52, 125, 83, 1) 80%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+ 
+        /* ─── START SCREEN ─── */
+        #startScreen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        /* Floating food emojis in background */
+        .floaters {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+ 
+        .floater {
+            position: absolute;
+            font-size: 2.2rem;
+            opacity: 0.18;
+            animation: floatUp linear infinite;
+        }
+ 
+        @keyframes floatUp {
+            0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10%  { opacity: 0.18; }
+            90%  { opacity: 0.18; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+ 
+        .start-card {
+            background: rgba(255,255,255,1);
+            border-radius: 24px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+            max-width: 680px;
+            width: 100%;
+            padding: 60px 50px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            animation: cardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+ 
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+ 
+        .logo-badge {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 12px;
+            animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+        }
+ 
+        @keyframes pop {
+            from { transform: scale(0.5); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+ 
+        .start-card h1 {
+            font-family: Trebuchet MS;
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--green-deep);
+            line-height: 1.1;
+            margin-bottom: 8px;
+            animation: fadeUp 0.6s ease 0.5s both;
+        }
+ 
+        .tagline {
+            font-size: 1.15rem;
+            color: #555;
+            margin-bottom: 36px;
+            font-style: italic;
+            animation: fadeUp 0.6s ease 0.6s both;
+        }
+ 
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.6s ease 0.7s both;
+        }
+ 
+        .feature-card {
+            background: var(--cream);
+            border-radius: 14px;
+            padding: 20px 14px;
+            border: 2px solid #e8f5e9;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+ 
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,110,42,0.12);
+        }
+ 
+        .feature-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+ 
+        .feature-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--green-deep);
+            margin-bottom: 4px;
+        }
+ 
+        .feature-card p {
+            font-size: 0.82rem;
+            color: #777;
+            line-height: 1.4;
+        }
+        
+        .about-why{
+            background: linear-gradient(135deg, #e8f5e9, #f0f7ff);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-bottom: 36px;
+            text-align: center;
+            animation: fadeUp 0.6s ease 0.8s both;;
+        }
+        
+        .about-why h4{
+            font-family: Trebuchet MS;
+            font-size: 1.2rem;
+            color: var(--green-deep);
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .about-why p{
+          line-height: 1.6;
+        }
+        
+        .how-it-works {
+            background: linear-gradient(135deg, #e8f5e9, #f0f7ff);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-bottom: 36px;
+            text-align: left;
+            animation: fadeUp 0.6s ease 0.8s both;
+        }
+ 
+        .how-it-works h2 {
+            font-family: Trebuchet MS;
+            font-size: 1.2rem;
+            color: var(--green-deep);
+            margin-bottom: 14px;
+            text-align: center;
+        }
+ 
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+ 
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+ 
+        .step-num {
+            background: var(--green-deep);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+ 
+        .step p {
+            font-size: 0.92rem;
+            color: #444;
+        }
+ 
+        .btn-start {
+            background: var(--green-deep);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 18px 56px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            font-family: Trebuchet MS;
+            animation: fadeUp 0.6s ease 0.9s both;
+            box-shadow: 0 6px 24px rgba(0,110,42,0.3);
+        }
+ 
+        .btn-start:hover {
+            background: #005522;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,110,42,0.4);
+        }
+ 
+        .btn-start:active {
+            transform: translateY(0);
+        }
+ 
+        .disclaimer {
+            margin-top: 18px;
+            font-size: 0.78rem;
+            color: #aaa;
+            animation: fadeUp 0.6s ease 1s both;
+        }
+ 
+        /* ─── MAIN APP ─── */
+        #mainApp {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+ 
+        #mainApp.active {
+            display: flex;
+            animation: appIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+ 
+        @keyframes appIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+ 
+        .app-header {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+ 
+        h1 {
+            text-align: center;
+            color: #006e2a;
+            font-family: Trebuchet MS;
+            font-size: 2.2em;
+        }
+ 
+        .btn-back {
+            background: none;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: #666;
+            font-family: Trebuchet MS;
+            transition: border-color 0.2s, color 0.2s;
+        }
+ 
+        .btn-back:hover {
+            border-color: var(--green-deep);
+            color: var(--green-deep);
+        }
+ 
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+        }
+ 
+        .ingredient-section { margin-bottom: 30px; }
+ 
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+ 
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+ 
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: Trebuchet MS;
+            transition: border-color 0.3s;
+        }
+ 
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+ 
+        .btn-add {
+            padding: 12px 25px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: Trebuchet MS;
+            transition: background 0.3s;
+        }
+ 
+        .btn-add:hover { background: #45a049; }
+ 
+        .ingredients-list {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 50px;
+        }
+ 
+        .ingredient-tag {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin: 5px 5px 5px 0;
+            font-size: 0.95em;
+        }
+ 
+        .ingredient-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+ 
+        .ingredient-tag button:hover { opacity: 0.8; }
+ 
+        .empty-state {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+ 
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+ 
+        .btn-submit {
+            flex: 1;
+            padding: 15px;
+            background: #006e2a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1em;
+            font-family: Trebuchet MS;
+            transition: background 0.3s;
+        }
+ 
+        .btn-submit:hover:not(:disabled) { background: #005522; }
+ 
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+ 
+        .btn-clear {
+            padding: 15px 30px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1em;
+            font-family: Trebuchet MS;
+            transition: background 0.3s;
+        }
+ 
+        .btn-clear:hover { background: #ee5a52; }
+ 
+        .loading {
+            display: none;
+            text-align: center;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+ 
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+ 
+        @keyframes spin {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+ 
+        .result-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+ 
+        .result-section.active { display: block; }
+ 
+        .result-title {
+            color: #006e2a;
+            font-family: Trebuchet MS;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+ 
+        .result-content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+ 
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+ 
+        .error.active { display: block; }
+ 
+        @media (max-width: 560px) {
+            .start-card { padding: 40px 24px; }
+            .start-card h1 { font-size: 2.4rem; }
+            .features { grid-template-columns: 1fr; }
+            .container { padding: 25px; }
+            h1 { font-size: 1.8em; }
+            .input-group { flex-direction: column; }
+            .btn-add { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+ 
+    <!-- ═══════════ START SCREEN ═══════════ -->
+    <div id="startScreen">
+ 
+        <!-- Floating background emojis -->
+        <div class="floaters" id="floaters"></div>
+ 
+        <div class="start-card">
+            <span class="logo-badge">🥗</span>
+            <h1>Leftover Labs</h1>
+            <p class="tagline">Aiming to Reduce Food Waste</p>
+ 
+            <div class="features">
+                <div class="feature-card">
+                    <span class="feature-icon">🧅</span>
+                    <h3>Any Ingredient</h3>
+                    <p>Add whatever's in your fridge or pantry</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3>AI-Powered</h3>
+                    <p>Smart recipes generated just for you</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">♻️</span>
+                    <h3>Zero Waste</h3>
+                    <p>Use what you have, waste nothing</p>
+                </div>
+            </div>
+            
+            <div class="about-why">
+              <h4>Why we do it?</h4>
+              <p>An estimated 46.5% of all food in Canada is wasted</p>
+              <p>Around 41.7% of this food could have been redirected to support Canadians</p>
+              <p>23% of food wasted is due to best before dates</p>
+              <p>A total of $58 Billion of food waste is avoidable</p>
+            </div>
+            
+            
+            <div class="how-it-works">
+                <h2>How it works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <p>Type in the ingredients you have on hand</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <p>Hit <strong>"Get Recipe Ideas"</strong> and let the AI work</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <p>Get delicious, personalized recipe suggestions instantly</p>
+                    </div>
+                </div>
+            </div>
+ 
+            <button class="btn-start" onclick="goToApp()">🚀 Let's Cook!</button>
+            <p class="disclaimer">No account needed · Free to use · Reduce food waste</p>
+        </div>
+    </div>
+ 
+    <!-- ═══════════ MAIN APP ═══════════ -->
+    <div id="mainApp">
+        <div class="container">
+            <div class="app-header">
+                <h1>🥗 Leftover Labs</h1>
+                <button class="btn-back" onclick="goToStart()">← Back</button>
+            </div>
+            <p class="subtitle">Transform your ingredients into delicious recipes</p>
+ 
+            <div class="ingredient-section">
+                <label for="ingredientInput">Enter an Ingredient:</label>
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="ingredientInput"
+                        placeholder="e.g., chicken, tomato, garlic..."
+                        autocomplete="off"
+                    >
+                    <button class="btn-add" onclick="addIngredient()">Add</button>
+                </div>
+ 
+                <div class="ingredients-list" id="ingredientsList">
+                    <div class="empty-state">No ingredients added yet</div>
+                </div>
+ 
+                <div class="button-group">
+                    <button class="btn-submit" id="submitBtn" onclick="analyzeIngredients()" disabled>
+                        Get Recipe Ideas
+                    </button>
+                    <button class="btn-clear" onclick="clearAll()">Clear All</button>
+                </div>
+            </div>
+ 
+            <div class="error" id="errorMsg"></div>
+ 
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Generating recipes...</p>
+            </div>
+ 
+            <div class="result-section" id="resultSection">
+                <h2 class="result-title">✨ Recipe Suggestions</h2>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        // ── Floating emoji background ──
+        const foodEmojis = ['🍅','🥕','🧄','🧅','🥦','🫑','🍋','🥚','🧀','🥩','🫘','🌽','🥬','🍄','🫙','🧂'];
+        const floatersEl = document.getElementById('floaters');
+ 
+        for (let i = 0; i < 18; i++) {
+            const el = document.createElement('div');
+            el.className = 'floater';
+            el.textContent = foodEmojis[Math.floor(Math.random() * foodEmojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (10 + Math.random() * 14) + 's';
+            el.style.animationDelay = (Math.random() * 12) + 's';
+            el.style.fontSize = (1.4 + Math.random() * 1.6) + 'rem';
+            floatersEl.appendChild(el);
+        }
+ 
+        // ── Screen transitions ──
+        function goToApp() {
+            document.getElementById('startScreen').style.display = 'none';
+            const app = document.getElementById('mainApp');
+            app.classList.add('active');
+        }
+ 
+        function goToStart() {
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('startScreen').style.display = 'flex';
+        }
+ 
+        // ── App logic ──
+        let ingredients = [];
+ 
+        function addIngredient() {
+            const input = document.getElementById('ingredientInput');
+            const ingredient = input.value.trim();
+            if (ingredient === '') { showError('Please enter an ingredient'); return; }
+            if (ingredients.includes(ingredient.toLowerCase())) { showError('This ingredient already exists'); return; }
+            ingredients.push(ingredient.toLowerCase());
+            input.value = '';
+            renderIngredients();
+            clearError();
+            input.focus();
+        }
+ 
+        function removeIngredient(ingredient) {
+            ingredients = ingredients.filter(i => i !== ingredient);
+            renderIngredients();
+        }
+ 
+        function renderIngredients() {
+            const list = document.getElementById('ingredientsList');
+            const submitBtn = document.getElementById('submitBtn');
+            if (ingredients.length === 0) {
+                list.innerHTML = '<div class="empty-state">No ingredients added yet</div>';
+                submitBtn.disabled = true;
+            } else {
+                list.innerHTML = ingredients
+                    .map(ing => `
+                        <span class="ingredient-tag">
+                            ${ing}
+                            <button onclick="removeIngredient('${ing}')" type="button">×</button>
+                        </span>`)
+                    .join('');
+                submitBtn.disabled = false;
+            }
+        }
+ 
+        function clearAll() {
+            ingredients = [];
+            renderIngredients();
+            document.getElementById('resultSection').classList.remove('active');
+            clearError();
+        }
+ 
+        async function analyzeIngredients() {
+            if (ingredients.length === 0) { showError('Please add at least one ingredient'); return; }
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('resultSection');
+            const resultContent = document.getElementById('resultContent');
+            loading.style.display = 'block';
+            resultSection.classList.remove('active');
+            clearError();
+            try {
+                const response = await fetch('/api/analyze-ingredients', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ingredients })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to generate recipes');
+                resultContent.textContent = data.recipes;
+                resultSection.classList.add('active');
+            } catch (error) {
+                showError('Error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+ 
+        function showError(message) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = message;
+            errorEl.classList.add('active');
+        }
+ 
+        function clearError() {
+            document.getElementById('errorMsg').classList.remove('active');
+        }
+ 
+        document.getElementById('ingredientInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addIngredient();
+        });
+    </script>
+</body>
+</html>
+ 

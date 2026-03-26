@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Input - Leftover Labs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #006e2a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #006e2a;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .ingredient-section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .input-group {
+            display: flex;  
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-add {
+            padding: 12px 25px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #45a049;
+        }
+
+        .ingredients-list {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 50px;
+        }
+
+        .ingredient-tag {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin: 5px 5px 5px 0;
+            font-size: 0.95em;
+        }
+
+        .ingredient-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .ingredient-tag button:hover {
+            opacity: 0.8;
+        }
+
+        .empty-state {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 15px;
+            background: #006e2a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background: #005522;
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-clear {
+            padding: 15px 30px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background 0.3s;
+        }
+
+        .btn-clear:hover {
+            background: #ee5a52;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        .result-title {
+            color: #006e2a;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .result-content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .input-group {
+                flex-direction: column;
+            }
+            .btn-add {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 Leftover Labs</h1>
+        <p class="subtitle">Transform your ingredients into delicious recipes</p>
+
+        <div class="ingredient-section">
+            <label for="ingredientInput">Enter an Ingredient:</label>
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="ingredientInput" 
+                    placeholder="e.g., chicken, tomato, garlic..." 
+                    autocomplete="off"
+                >
+                <button class="btn-add" onclick="addIngredient()">Add</button>
+            </div>
+
+            <div class="ingredients-list" id="ingredientsList">
+                <div class="empty-state">No ingredients added yet</div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-submit" id="submitBtn" onclick="analyzeIngredients()" disabled>
+                    Get Recipe Ideas
+                </button>
+                <button class="btn-clear" onclick="clearAll()">Clear All</button>
+            </div>
+        </div>
+
+        <div class="error" id="errorMsg"></div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Generating recipes...</p>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <h2 class="result-title">✨ Recipe Suggestions</h2>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let ingredients = [];
+
+        function addIngredient() {
+            const input = document.getElementById('ingredientInput');
+            const ingredient = input.value.trim();
+
+            if (ingredient === '') {
+                showError('Please enter an ingredient');
+                return;
+            }
+
+            if (ingredients.includes(ingredient.toLowerCase())) {
+                showError('This ingredient already exists');
+                return;
+            }
+
+            ingredients.push(ingredient.toLowerCase());
+            input.value = '';
+            renderIngredients();
+            clearError();
+            input.focus();
+        }
+
+        function removeIngredient(ingredient) {
+            ingredients = ingredients.filter(i => i !== ingredient);
+            renderIngredients();
+        }
+
+        function renderIngredients() {
+            const list = document.getElementById('ingredientsList');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (ingredients.length === 0) {
+                list.innerHTML = '<div class="empty-state">No ingredients added yet</div>';
+                submitBtn.disabled = true;
+            } else {
+                list.innerHTML = ingredients
+                    .map(ing => `
+                        <span class="ingredient-tag">
+                            ${ing}
+                            <button onclick="removeIngredient('${ing}')" type="button">×</button>
+                        </span>
+                    `)
+                    .join('');
+                submitBtn.disabled = false;
+            }
+        }
+
+        function clearAll() {
+            ingredients = [];
+            renderIngredients();
+            document.getElementById('resultSection').classList.remove('active');
+            clearError();
+        }
+
+        async function analyzeIngredients() {
+            if (ingredients.length === 0) {
+                showError('Please add at least one ingredient');
+                return;
+            }
+
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('resultSection');
+            const resultContent = document.getElementById('resultContent');
+
+            loading.style.display = 'block';
+            resultSection.classList.remove('active');
+            clearError();
+
+            try {
+                const response = await fetch('/api/analyze-ingredients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ingredients })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate recipes');
+                }
+
+                resultContent.textContent = data.recipes;
+                resultSection.classList.add('active');
+            } catch (error) {
+                showError('Error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = message;
+            errorEl.classList.add('active');
+        }
+
+        function clearError() {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.classList.remove('active');
+        }
+
+        // Allow pressing Enter to add ingredient
+        document.getElementById('ingredientInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addIngredient();
+            }
+        });
+    </script>
+</body>
+</html>
